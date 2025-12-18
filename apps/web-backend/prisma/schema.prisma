@@ -1,0 +1,162 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Account {
+  id                 String  @id
+  userId             String
+  provider           String
+  providerAccountId  String
+  createdAt          DateTime
+  updatedAt          DateTime
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Session {
+  id        String   @id
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime
+  updatedAt DateTime
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model VerificationToken {
+  id        String   @id
+  identifier String
+  token     String
+  expiresAt DateTime
+}
+
+
+model User {
+  id            String   @id
+  email         String   @unique
+  emailVerified Boolean
+  createdAt     DateTime
+  updatedAt     DateTime
+
+  accounts Account[]
+  sessions Session[]
+
+  profile        Profile?
+  billingAccount BillingAccount?
+  apiKeys        ApiKey[]
+  sandboxes      Sandbox[]
+  sandboxStats   SandboxStats?
+  usageMetrics   UsageMetric[]
+}
+
+
+model Profile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model ApiKey {
+  id        String   @id @default(cuid())
+  userId    String
+  key       String   @unique
+  createdAt DateTime @default(now())
+  revokedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model BillingAccount {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  credits   Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    User            @relation(fields: [userId], references: [id])
+  history BillingHistory[]
+}
+
+model BillingHistory {
+  id          String   @id @default(cuid())
+  billingId   String
+  amount      Int
+  type        String   // credit | debit
+  description String?
+  createdAt   DateTime @default(now())
+
+  billing BillingAccount @relation(fields: [billingId], references: [id])
+}
+
+model Sandbox {
+  id        String   @id @default(cuid())
+  userId    String
+  status    String
+  startedAt DateTime
+  endedAt   DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model SandboxStats {
+  id                     String   @id @default(cuid())
+  userId                 String   @unique
+  peakConcurrentSandbox  Int      @default(0)
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Template {
+  id         String   @id @default(cuid())
+  name       String
+  cpu        Int
+  memoryMb   Int
+  visibility String   // public | private
+  envVersion String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  builds Build[]
+}
+
+model Build {
+  id        String   @id @default(cuid())
+  templateId String
+  status    String   // queued | running | success | failed
+  startedAt DateTime
+  duration  Int?
+
+  template Template @relation(fields: [templateId], references: [id])
+}
+
+model UsageMetric {
+  id          String   @id @default(cuid())
+  userId      String
+  periodStart DateTime
+  periodEnd   DateTime
+
+  sandboxesStarted Int
+  sandboxesResumed Int
+  usageCost        Int
+  vcpuHours        Float
+  ramHours         Float
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, periodStart])
+}
