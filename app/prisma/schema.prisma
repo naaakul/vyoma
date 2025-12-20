@@ -7,6 +7,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model ApiKey {
+  id          String   @id @default(cuid())
+  userId      String
+
+  name        String
+  keyHash     String   @unique
+  lastUsedAt  DateTime?
+
+  createdAt   DateTime @default(now())
+  revokedAt   DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("api_key")
+}
+
+
 model User {
   id            String   @id @default(cuid())
   email         String   @unique
@@ -14,8 +32,12 @@ model User {
   image         String?
   emailVerified Boolean  @default(false)
 
+  // 💰 Credits
+  credits       Decimal  @default(10.0)
+
   accounts      Account[]
   sessions      Session[]
+  apiKeys       ApiKey[]
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
