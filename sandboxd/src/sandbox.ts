@@ -1,30 +1,62 @@
-import { docker } from "./docker.js";
-import { v4 as uuid } from "uuid";
+import { run } from "./docker";
 
-export async function createSandbox() {
-  const id = `vyoma-${uuid()}`;
+export async function startSandbox(
+  sandboxId: string,
+  image: string,
+  containerPort: number
+) {
+  await run(`
+    docker run -d \
+      --name ${sandboxId} \
+      -p 0:${containerPort} \
+      ${image}
+  `);
 
-  const container = await docker.createContainer({
-    Image: "node:20-alpine",
-    name: id,
-    Cmd: ["sh", "-c", "while true; do sleep 1; done"],
-    Tty: false,
-    HostConfig: {
-      AutoRemove: true,
-      Memory: 512 * 1024 * 1024, // 512 MB
-      NanoCpus: 1_000_000_000,   // 1 CPU
-    },
-  });
+  const port = await run(
+    `docker port ${sandboxId} ${containerPort}`
+  );
 
-  await container.start();
+  const hostPort = port.split(":").pop()?.trim();
 
-  return {
-    id,
-    status: "running",
-  };
+  return { hostPort };
 }
 
-export async function stopSandbox(id: string) {
-  const container = docker.getContainer(id);
-  await container.stop();
+export async function stopSandbox(sandboxId: string) {
+  await run(`docker rm -f ${sandboxId}`);
+}
+
+export async function writeFile(
+  sandboxId: string,
+  path: string,
+  content: string
+) {
+  const escaped = content.replace(/"/g, '\\"');
+
+  await run(`
+    docker exec ${sandboxId} sh -c \
+    "mkdir -p $(dirname ${path}) && echo \\"${escaped}\\" > ${path}"
+  `);
+}
+
+export async function execCommand(
+  sandboxId: string,
+  command: string,
+  cwd?: string
+) {
+  const cmd = cwd
+    ? `cd ${cwd} && ${command}`
+    : command;
+
+  return await run(`
+    docker exec ${sandboxId} sh -c "${cmd}"
+  `);
+}
+
+export async function sandboxStatus(sandboxId: string) {
+  try {
+    await run(`docker inspect ${sandboxId}`);
+    return "running";
+  } catch {
+    return "stopped";
+  }
 }

@@ -1,5 +1,10 @@
-import Docker from "dockerode";
+import { exec } from "child_process";
 
-export const docker = new Docker({
-  socketPath: "/var/run/docker.sock",
-});
+export function run(cmd: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    exec(cmd, (err, stdout, stderr) => {
+      if (err) reject(stderr || err.message);
+      else resolve(stdout.trim());
+    });
+  });
+}
