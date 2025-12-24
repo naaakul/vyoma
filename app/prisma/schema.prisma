@@ -32,12 +32,12 @@ model User {
   image         String?
   emailVerified Boolean  @default(false)
 
-  // 💰 Credits
   credits       Decimal  @default(10.0)
 
   accounts      Account[]
   sessions      Session[]
   apiKeys       ApiKey[]
+  sandboxes     Sandbox[]
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -103,4 +103,26 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model Sandbox {
+  id        String   @id @default(cuid())
+  userId    String
+  template  String
+  status    String
+  createdAt DateTime @default(now())
+  stoppedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sandbox")
+}
+
+model UsageEvent {
+  id        String   @id @default(cuid())
+  userId    String
+  sandboxId String?
+  cost      Decimal
+  reason    String
+  createdAt DateTime @default(now())
 }

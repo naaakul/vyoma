@@ -18,6 +18,22 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid name" }, { status: 400 });
   }
 
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { id: true, credits: true },
+  });
+
+  if (!user) {
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
+  }
+
+  if (user.credits.toNumber() <= 0) {
+    return NextResponse.json(
+      { error: "Insufficient credits" },
+      { status: 402 }
+    );
+  }
+
   const plainKey = generateApiKey();
   const keyHash = hashApiKey(plainKey);
 
@@ -25,11 +41,12 @@ export async function POST(req: Request) {
     data: {
       name,
       keyHash,
-      userId: session.user.id,
+      userId: user.id,
     },
   });
 
   return NextResponse.json({
-    key: plainKey,
+    key: plainKey, 
   });
 }
+

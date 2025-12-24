@@ -1,7 +1,10 @@
 import crypto from "crypto";
 
-export function generateApiKey() {
-  return `nak_${crypto.randomBytes(24).toString("hex")}`;
+type ApiKeyEnv = "live" | "test";
+
+export function generateApiKey(env: ApiKeyEnv = "live") {
+  const random = crypto.randomBytes(24).toString("hex");
+  return `vy_${env}_${random}`;
 }
 
 export function hashApiKey(key: string) {
@@ -9,5 +12,6 @@ export function hashApiKey(key: string) {
 }
 
 export function maskApiKey(key: string) {
-  return `${key.slice(0, 12)}****${key.slice(-4)}`;
+  const prefixEnd = key.indexOf("_", key.indexOf("_") + 1) + 1;
+  return `${key.slice(0, prefixEnd + 8)}****${key.slice(-4)}`;
 }
