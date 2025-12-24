@@ -50,6 +50,7 @@ const PORT = Number(process.env.PORT) || 4000;
 serve({
   fetch: app.fetch,
   port: PORT,
+  hostname: "0.0.0.0",
 });
 
 console.log(`sandboxd listening on port ${PORT}`);

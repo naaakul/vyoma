@@ -35,6 +35,7 @@ export async function POST(req: Request) {
   }
 
   const plainKey = generateApiKey();
+  console.log(plainKey)
   const keyHash = hashApiKey(plainKey);
 
   await prisma.apiKey.create({

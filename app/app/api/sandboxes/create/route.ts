@@ -5,29 +5,49 @@ import { callSandboxd } from "@/lib/sandboxd";
 import { prisma } from "@/utils/auth-helpers";
 
 export async function POST(req: Request) {
-  const user = await authenticateApiKey(req);
-  const body = await req.json();
-
-  if (user.credits.toNumber() <= 0) {
-    return Response.json({ error: "Insufficient credits" }, { status: 402 });
-  }
-
-  const sandbox = await prisma.sandbox.create({
-    data: {
-      userId: user.id,
-      template: body.template,
-      status: "creating",
-    },
-  });
-
   try {
-    const res = await callSandboxd("/create", {
-      sandboxId: sandbox.id,
-      template: body.template,
-      timeout: body.timeout,
+    console.log("CREATE: request received");
+
+    const user = await authenticateApiKey(req);
+    console.log("CREATE: user", user.id);
+
+    const body = await req.json();
+    console.log("CREATE: body", body);
+
+    const { template, timeout } = body;
+
+    if (!template) {
+      return Response.json(
+        { error: "template is required" },
+        { status: 400 }
+      );
+    }
+
+    if (user.credits.toNumber() <= 0) {
+      return Response.json(
+        { error: "Insufficient credits" },
+        { status: 402 }
+      );
+    }
+
+    const sandbox = await prisma.sandbox.create({
+      data: {
+        userId: user.id,
+        template,
+        status: "creating",
+      },
     });
 
-    if (!res.ok) throw new Error("sandboxd failed");
+    const res = await callSandboxd("/sandbox/run", {
+      sandboxId: sandbox.id,
+      image: template,
+      port: 3000,
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`sandboxd failed: ${res.status} ${text}`);
+    }
 
     await prisma.sandbox.update({
       where: { id: sandbox.id },
@@ -42,8 +62,11 @@ export async function POST(req: Request) {
     });
 
     return Response.json({ sandboxId: sandbox.id });
-  } catch {
-    await prisma.sandbox.delete({ where: { id: sandbox.id } });
-    throw new Response("Sandbox creation failed", { status: 500 });
+  } catch (err: any) {
+    console.error("CREATE_SANDBOX_FATAL_ERROR");
+    console.error(err);
+    console.error(err?.stack);
+
+    return new Response("CREATE FAILED", { status: 500 });
   }
 }

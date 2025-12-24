@@ -39,7 +39,7 @@ export async function POST(req: Request) {
 
   let result;
   try {
-    const res = await callSandboxd("/exec", {
+    const res = await callSandboxd("/sandbox/write", {
       sandboxId,
       command,
       cwd,

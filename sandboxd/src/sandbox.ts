@@ -5,12 +5,11 @@ export async function startSandbox(
   image: string,
   containerPort: number
 ) {
-  await run(`
-    docker run -d \
-      --name ${sandboxId} \
-      -p 0:${containerPort} \
-      ${image}
-  `);
+  console.log("startSandbox", { sandboxId, image, containerPort });
+
+  await run(
+    `docker run -d --name ${sandboxId} -p 0:${containerPort} ${image}`
+  );
 
   const port = await run(
     `docker port ${sandboxId} ${containerPort}`
@@ -20,6 +19,7 @@ export async function startSandbox(
 
   return { hostPort };
 }
+
 
 export async function stopSandbox(sandboxId: string) {
   await run(`docker rm -f ${sandboxId}`);
@@ -32,25 +32,24 @@ export async function writeFile(
 ) {
   const escaped = content.replace(/"/g, '\\"');
 
-  await run(`
-    docker exec ${sandboxId} sh -c \
-    "mkdir -p $(dirname ${path}) && echo \\"${escaped}\\" > ${path}"
-  `);
+  await run(
+    `docker exec ${sandboxId} sh -c "mkdir -p $(dirname ${path}) && echo \\"${escaped}\\" > ${path}"`
+  );
 }
+
 
 export async function execCommand(
   sandboxId: string,
   command: string,
   cwd?: string
 ) {
-  const cmd = cwd
-    ? `cd ${cwd} && ${command}`
-    : command;
+  const cmd = cwd ? `cd ${cwd} && ${command}` : command;
 
-  return await run(`
-    docker exec ${sandboxId} sh -c "${cmd}"
-  `);
+  return await run(
+    `docker exec ${sandboxId} sh -c "${cmd}"`
+  );
 }
+
 
 export async function sandboxStatus(sandboxId: string) {
   try {

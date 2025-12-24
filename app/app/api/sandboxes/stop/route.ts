@@ -35,7 +35,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const res = await callSandboxd("/stop", { sandboxId });
+    const res = await callSandboxd("/sandbox/stop", { sandboxId });
     if (!res.ok) {
     }
   } catch {
