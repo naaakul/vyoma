@@ -1,2 +1,2 @@
-export * from "./client";
-// export * from "./sandbox";
+export { VyomaClient } from "./core/client";
+export * from "./types";

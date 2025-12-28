@@ -5,7 +5,9 @@
     "declaration": true,
     "outDir": "dist",
     "strict": true,
-    "moduleResolution": "node",
-    "esModuleInterop": true
-  }
+    "moduleResolution": "Bundler",
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": ["src"]
 }

@@ -1,24 +1,35 @@
 {
-  "name": "@vyoma/sdk",
+  "name": "vyoma",
   "version": "0.1.0",
   "description": "Vyoma JavaScript SDK",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts",
-    "dev": "tsup src/index.ts --watch",
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint .",
     "prepublishOnly": "npm run build"
   },
-  "keywords": ["vyoma", "sandbox", "docker", "sdk"],
-  "author": "Vyoma",
+  "keywords": [
+    "vyoma",
+    "sdk",
+    "sandbox"
+  ],
   "license": "MIT",
-  "dependencies": {
-    "axios": "^1.6.0"
-  },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "tsup": "^8.0.0",
-    "typescript": "^5.0.0"
+    "@typescript-eslint/eslint-plugin": "^8.50.1",
+    "@typescript-eslint/parser": "^8.50.1",
+    "eslint": "^9.39.2",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
   }
 }
