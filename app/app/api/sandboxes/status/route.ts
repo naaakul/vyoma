@@ -34,36 +34,43 @@ export async function POST(req: Request) {
       );
     }
 
-    if (sandbox.status === "stopped") {
-      return Response.json({
-        sandboxId,
-        status: "stopped",
+    let runtimeStatus = sandbox.status;
+
+    if (sandbox.status === "running") {
+      try {
+        const res = await callSandboxd(
+          `/sandbox/status/${sandboxId}`,
+          null
+        );
+
+        if (res.ok) {
+          const data = await res.json();
+          runtimeStatus = data.status;
+        }
+      } catch {
+      }
+    }
+
+    if (sandbox.status === "running" && runtimeStatus === "stopped") {
+      await prisma.sandbox.update({
+        where: { id: sandboxId },
+        data: {
+          status: "stopped",
+          stoppedAt: new Date(),
+        },
       });
     }
 
-    try {
-      const res = await callSandboxd("/sandbox/stop", { sandboxId });
-      if (!res.ok) {
-      }
-    } catch {
-    }
-
-    await prisma.sandbox.update({
-      where: { id: sandboxId },
-      data: {
-        status: "stopped",
-        stoppedAt: new Date(),
-      },
-    });
-
     return Response.json({
       sandboxId,
-      status: "stopped",
+      status: runtimeStatus,
+      createdAt: sandbox.createdAt,
+      stoppedAt: sandbox.stoppedAt,
     });
   } catch (err) {
-    console.error("STOP_FATAL_ERROR", err);
+    console.error("STATUS_FATAL_ERROR", err);
     return Response.json(
-      { error: "Failed to stop sandbox" },
+      { error: "Failed to fetch sandbox status" },
       { status: 500 }
     );
   }

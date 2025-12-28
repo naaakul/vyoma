@@ -12,6 +12,7 @@ import {
 const app = new Hono();
 
 app.post("/sandbox/run", async (c) => {
+  console.log("request recieved")
   const { sandboxId, image, port } = await c.req.json();
   if (!sandboxId || !image || !port) {
     return c.json({ error: "missing fields" }, 400);
