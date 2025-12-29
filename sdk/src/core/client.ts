@@ -1,4 +1,5 @@
 import { SandboxResource } from "../resources/sandbox";
+import { VyomaError } from "./error";
 
 export interface VyomaClientOptions {
   apiKey: string;
@@ -29,8 +30,12 @@ export class VyomaClient {
     });
 
     if (!res.ok) {
-      const text = await res.text();
-      throw new Error(`Vyoma API error (${res.status}): ${text}`);
+      const data = await res.json().catch(() => null);
+      throw new VyomaError(
+        data?.error ?? "Vyoma API error",
+        res.status,
+        data?.code
+      );
     }
 
     return res.json() as Promise<T>;

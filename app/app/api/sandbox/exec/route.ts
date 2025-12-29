@@ -38,10 +38,7 @@ export async function POST(req: Request) {
     }
 
     if (user.credits.toNumber() <= 0) {
-      return Response.json(
-        { error: "Insufficient credits" },
-        { status: 402 }
-      );
+      return Response.json({ error: "Insufficient credits" }, { status: 402 });
     }
 
     const res = await callSandboxd("/sandbox/exec", {
@@ -52,7 +49,10 @@ export async function POST(req: Request) {
 
     if (!res.ok) {
       const text = await res.text();
-      throw new Error(`sandboxd exec failed: ${res.status} ${text}`);
+      return Response.json(
+        { error: "sandboxd exec infrastructure failure", details: text },
+        { status: 502 }
+      );
     }
 
     const result = await res.json();
@@ -79,12 +79,13 @@ export async function POST(req: Request) {
             stoppedAt: new Date(),
           },
         });
-      } catch {
-      }
+      } catch {}
     }
 
     return Response.json({
-      output: result.output,
+      stdout: result.stdout,
+      stderr: result.stderr,
+      exitCode: result.exitCode,
     });
   } catch (err) {
     console.error("EXEC_FATAL_ERROR", err);

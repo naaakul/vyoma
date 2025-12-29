@@ -2,12 +2,12 @@ import { prisma } from "@/lib/prisma";
 import { callSandboxd } from "@/lib/sandboxd";
 import { authenticateApiKey } from "@/lib/auth/apiKey";
 
-export async function POST(req: Request) {
+export async function GET(req: Request) {
   try {
     const user = await authenticateApiKey(req);
 
-    const body = await req.json();
-    const { sandboxId } = body;
+    const { searchParams } = new URL(req.url);
+    const sandboxId = searchParams.get("sandboxId");
 
     if (!sandboxId) {
       return Response.json(
@@ -48,6 +48,7 @@ export async function POST(req: Request) {
           runtimeStatus = data.status;
         }
       } catch {
+        // sandboxd unreachable → keep DB status
       }
     }
 

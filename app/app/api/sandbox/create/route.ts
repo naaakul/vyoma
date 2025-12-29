@@ -14,9 +14,9 @@ export async function POST(req: Request) {
     const body = await req.json();
     console.log("CREATE: body", body);
 
-    const { template, timeout } = body;
+    const { templateId, timeout } = body;
 
-    if (!template) {
+    if (!templateId) {
       return Response.json(
         { error: "template is required" },
         { status: 400 }
@@ -33,14 +33,14 @@ export async function POST(req: Request) {
     const sandbox = await prisma.sandbox.create({
       data: {
         userId: user.id,
-        template,
+        template: templateId,
         status: "creating",
       },
     });
 
     const res = await callSandboxd("/sandbox/run", {
       sandboxId: sandbox.id,
-      image: template,
+      image: templateId,
       port: 3000,
     });
 

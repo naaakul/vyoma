@@ -45,10 +45,25 @@ export async function execCommand(
 ) {
   const cmd = cwd ? `cd ${cwd} && ${command}` : command;
 
-  return await run(
-    `docker exec ${sandboxId} sh -c "${cmd}"`
-  );
+  try {
+    const stdout = await run(
+      `docker exec ${sandboxId} sh -c "${cmd}"`
+    );
+
+    return {
+      stdout,
+      stderr: "",
+      exitCode: 0,
+    };
+  } catch (err: any) {
+    return {
+      stdout: "",
+      stderr: String(err),
+      exitCode: 1,
+    };
+  }
 }
+
 
 
 export async function sandboxStatus(sandboxId: string) {

@@ -3,6 +3,9 @@ import {
   SandboxCreateRequest,
   SandboxCreateResponse,
   SandboxStatusResponse,
+  SandboxStopResponse,
+  SandboxWriteResponse,
+  SandboxExecResponse,
 } from "../types/sandbox";
 
 export class SandboxResource {
@@ -19,7 +22,7 @@ export class SandboxResource {
   }
 
   stop(sandboxId: string) {
-    return this.client.request(
+    return this.client.request<SandboxStopResponse>(
       "/sandbox/stop",
       {
         method: "POST",
@@ -30,7 +33,46 @@ export class SandboxResource {
 
   status(sandboxId: string) {
     return this.client.request<SandboxStatusResponse>(
-      `/sandbox/status?sandboxId=${sandboxId}`
+      `/sandbox/status?sandboxId=${sandboxId}`,
+      {
+        method: "GET",
+      }
+    );
+  }
+
+  write(
+    sandboxId: string,
+    path: string,
+    content: string
+  ) {
+    return this.client.request<SandboxWriteResponse>(
+      "/sandbox/write",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          sandboxId,
+          path,
+          content,
+        }),
+      }
+    );
+  }
+
+  exec(
+    sandboxId: string,
+    command: string,
+    cwd?: string
+  ) {
+    return this.client.request<SandboxExecResponse>(
+      "/sandbox/exec",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          sandboxId,
+          command,
+          cwd,
+        }),
+      }
     );
   }
 }

@@ -12,7 +12,7 @@ import {
 const app = new Hono();
 
 app.post("/sandbox/run", async (c) => {
-  console.log("request recieved")
+  console.log("request recieved");
   const { sandboxId, image, port } = await c.req.json();
   if (!sandboxId || !image || !port) {
     return c.json({ error: "missing fields" }, 400);
@@ -36,8 +36,10 @@ app.post("/sandbox/write", async (c) => {
 
 app.post("/sandbox/exec", async (c) => {
   const { sandboxId, command, cwd } = await c.req.json();
-  const output = await execCommand(sandboxId, command, cwd);
-  return c.json({ output });
+
+  const result = await execCommand(sandboxId, command, cwd);
+
+  return c.json(result);
 });
 
 app.get("/sandbox/status/:id", async (c) => {

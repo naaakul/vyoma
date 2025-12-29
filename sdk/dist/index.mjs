@@ -23,8 +23,47 @@ var SandboxResource = class {
   }
   status(sandboxId) {
     return this.client.request(
-      `/sandbox/status?sandboxId=${sandboxId}`
+      `/sandbox/status?sandboxId=${sandboxId}`,
+      {
+        method: "GET"
+      }
     );
+  }
+  write(sandboxId, path, content) {
+    return this.client.request(
+      "/sandbox/write",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          sandboxId,
+          path,
+          content
+        })
+      }
+    );
+  }
+  exec(sandboxId, command, cwd) {
+    return this.client.request(
+      "/sandbox/exec",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          sandboxId,
+          command,
+          cwd
+        })
+      }
+    );
+  }
+};
+
+// src/core/error.ts
+var VyomaError = class extends Error {
+  constructor(message, status, code) {
+    super(message);
+    this.name = "VyomaError";
+    this.status = status;
+    this.code = code;
   }
 };
 
@@ -48,8 +87,12 @@ var VyomaClient = class {
       }
     });
     if (!res.ok) {
-      const text = await res.text();
-      throw new Error(`Vyoma API error (${res.status}): ${text}`);
+      const data = await res.json().catch(() => null);
+      throw new VyomaError(
+        data?.error ?? "Vyoma API error",
+        res.status,
+        data?.code
+      );
     }
     return res.json();
   }

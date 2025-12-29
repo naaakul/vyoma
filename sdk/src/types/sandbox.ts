@@ -13,6 +13,22 @@ export interface SandboxStopRequest {
   sandboxId: ID;
 }
 
+export interface SandboxStatusRequest {
+  sandboxId: ID;
+}
+
+export interface SandboxWriteRequest {
+  sandboxId: ID;
+  path: string;
+  content: string;
+}
+
+export interface SandboxExecRequest {
+  sandboxId: ID;
+  command: string;
+  cwd?: string;
+}
+
 /* =====================
    Responses
 ===================== */
@@ -36,7 +52,22 @@ export interface SandboxCreateResponse {
   sandbox: Sandbox;
 }
 
+export interface SandboxStopResponse {
+  sandboxId: ID;
+  status: "stopped";
+}
+
 export interface SandboxStatusResponse {
   sandboxId: ID;
   status: SandboxStatus;
+}
+
+export interface SandboxWriteResponse {
+  success: true;
+}
+
+export interface SandboxExecResponse {
+  stdout: string;
+  stderr: string;
+  exitCode: number;
 }
