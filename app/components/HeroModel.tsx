@@ -24,28 +24,32 @@ function Model() {
 
   const isMobile = useIsMobile();
 
-  // Store initial rotation (original pose)
-  const initialRot = useRef(new THREE.Euler(0, 0, 0));
+  const initialRot = useRef(new THREE.Euler(0, 5, 0));
 
-  // tracks last time mouse moved
   const lastMoveTime = useRef<number>(performance.now());
   const prevMouse = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    if (!ref.current) return;
+    ref.current.rotation.copy(initialRot.current);
+  }, []);
 
   useFrame((state, delta) => {
     if (!ref.current) return;
 
-    // ✅ MOBILE: infinite auto rotate, no interaction
     if (isMobile) {
       ref.current.rotation.y += delta * 0.6; // speed
-      ref.current.rotation.x = THREE.MathUtils.lerp(ref.current.rotation.x, 0, 0.08);
+      ref.current.rotation.x = THREE.MathUtils.lerp(
+        ref.current.rotation.x,
+        0,
+        0.08
+      );
       return;
     }
 
-    // ✅ DESKTOP: mouse-follow rotation
     const mx = state.mouse.x;
     const my = state.mouse.y;
 
-    // detect mouse movement
     const moved =
       Math.abs(mx - prevMouse.current.x) > 0.0005 ||
       Math.abs(my - prevMouse.current.y) > 0.0005;
@@ -58,7 +62,6 @@ function Model() {
     const idleForMs = performance.now() - lastMoveTime.current;
 
     if (idleForMs > 1000) {
-      // ✅ If idle > 1.5s: smoothly return to original rotation
       ref.current.rotation.x = THREE.MathUtils.lerp(
         ref.current.rotation.x,
         initialRot.current.x,
@@ -70,30 +73,44 @@ function Model() {
         0.06
       );
     } else {
-      // ✅ follow mouse while active
       const targetY = mx * 0.7;
       const targetX = -my * 0.35;
 
-      ref.current.rotation.y = THREE.MathUtils.lerp(ref.current.rotation.y, targetY, 0.08);
-      ref.current.rotation.x = THREE.MathUtils.lerp(ref.current.rotation.x, targetX, 0.08);
+      ref.current.rotation.y = THREE.MathUtils.lerp(
+        ref.current.rotation.y,
+        targetY,
+        0.08
+      );
+      ref.current.rotation.x = THREE.MathUtils.lerp(
+        ref.current.rotation.x,
+        targetX,
+        0.08
+      );
     }
   });
 
-  return <primitive ref={ref} object={scene} />;
+  return (
+  <primitive
+    ref={ref}
+    object={scene}
+    position={[1.5, 1.2, 0]}
+  />
+);
+
 }
 
 export default function HeroModel() {
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-screen absolute inset-0">
       <Canvas
-        camera={{ position: [0, 0, 5], fov: 40 }}
+        camera={{ position: [-1, -0.5, 5], fov: 40 }}
         gl={{ antialias: true, alpha: true }}
         onCreated={({ gl }) => {
-          gl.setClearColor(0x000000, 0); // ✅ transparent bg
+          gl.setClearColor(0x000000, 0);
         }}
       >
         <ambientLight intensity={1} />
-        <directionalLight position={[5, 5, 5]} intensity={2} />
+        <directionalLight position={[5, 5, 5]} intensity={5} />
         <Environment preset="city" />
 
         <Bounds fit clip observe margin={2.8}>

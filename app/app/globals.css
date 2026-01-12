@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -16,6 +17,12 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+  }
+}
+
+@layer utilities {
+  .font-jose {
+    font-family: "Josefin Sans", sans-serif;
   }
 }
 
