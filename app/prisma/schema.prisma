@@ -17,6 +17,7 @@ model ApiKey {
 
   createdAt   DateTime @default(now())
   revokedAt   DateTime?
+  expiresAt   DateTime
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
