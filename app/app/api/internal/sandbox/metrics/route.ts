@@ -3,13 +3,15 @@ import { prisma } from "@/lib/prisma";
 import { verifySignature } from "@/lib/internal/verifySignature";
 
 export async function POST(req: NextRequest) {
-  const isValid = await verifySignature(req);
+  const rawBody = await req.text();
+  const signature = req.headers.get("x-signature");
+
+  const isValid = verifySignature(rawBody, signature);
   if (!isValid) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
   }
 
-  const body = JSON.parse(await req.text());
-
+  const body = JSON.parse(rawBody);
   const { sandboxId, cpu, memory, disk, timestamp } = body;
 
   await prisma.sandboxMetric.create({
@@ -25,7 +27,7 @@ export async function POST(req: NextRequest) {
   await prisma.sandbox.update({
     where: { id: sandboxId },
     data: {
-      startedAt: new Date(timestamp),
+      lastHeartbeatAt: new Date(timestamp),
     },
   });
 

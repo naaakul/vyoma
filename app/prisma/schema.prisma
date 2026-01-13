@@ -108,14 +108,15 @@ model Verification {
 
 model Sandbox {
   id        String   @id @default(cuid())
-  userId    String
+  userId    String?
   template  String
   status    String
   createdAt DateTime @default(now())
   startedAt DateTime?
   stoppedAt DateTime?
+  lastHeartbeatAt DateTime
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sandbox")
 }

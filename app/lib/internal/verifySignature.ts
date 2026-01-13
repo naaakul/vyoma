@@ -1,15 +1,11 @@
 import crypto from "crypto";
-import { NextRequest } from "next/server";
 
-export async function verifySignature(req: NextRequest) {
-  const signature = req.headers.get("x-signature");
+export function verifySignature(rawBody: string, signature: string | null) {
   if (!signature) return false;
-
-  const body = await req.text();
 
   const expected = crypto
     .createHmac("sha256", process.env.SANDBOX_SHARED_SECRET!)
-    .update(body)
+    .update(rawBody)
     .digest("hex");
 
   return signature === expected;

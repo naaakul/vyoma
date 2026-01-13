@@ -3,13 +3,16 @@ import { prisma } from "@/lib/prisma";
 import { verifySignature } from "@/lib/internal/verifySignature";
 
 export async function POST(req: NextRequest) {
-  const isValid = await verifySignature(req);
+  // ✅ read body ONCE
+  const rawBody = await req.text();
+  const signature = req.headers.get("x-signature");
+
+  const isValid = verifySignature(rawBody, signature);
   if (!isValid) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
   }
 
-  const body = JSON.parse(await req.text());
-
+  const body = JSON.parse(rawBody);
   const { sandboxId, type, timestamp, template } = body;
 
   await prisma.sandboxEvent.create({
@@ -26,14 +29,14 @@ export async function POST(req: NextRequest) {
       where: { id: sandboxId },
       update: {
         status: "running",
-        startedAt: new Date(timestamp),
+        lastHeartbeatAt: new Date(timestamp),
       },
       create: {
         id: sandboxId,
         template,
         status: "running",
         startedAt: new Date(timestamp),
-        userId: body.userId,
+        lastHeartbeatAt: new Date(timestamp),
       },
     });
   }
