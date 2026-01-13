@@ -1,4 +1,4 @@
-import HeroModel from "@/components/HeroModel";
+import HeroModel from "@/components/ui/HeroModel";
 import { Josefin_Sans } from "next/font/google";
 import { GrainGradient } from "@paper-design/shaders-react";
 import { auth } from "@/utils/auth-helpers";

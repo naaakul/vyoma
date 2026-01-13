@@ -1,4 +1,5 @@
 import { run } from "./docker";
+import { emitEvent } from "./events";
 
 export async function startSandbox(
   sandboxId: string,
@@ -15,6 +16,13 @@ export async function startSandbox(
     `docker port ${sandboxId} ${containerPort}`
   );
 
+  await emitEvent({
+    type: "SANDBOX_STARTED",
+    sandboxId,
+    image,
+    timestamp: Date.now(),
+  });
+
   const hostPort = port.split(":").pop()?.trim();
 
   return { hostPort };
@@ -23,6 +31,11 @@ export async function startSandbox(
 
 export async function stopSandbox(sandboxId: string) {
   await run(`docker rm -f ${sandboxId}`);
+  await emitEvent({
+    type: "SANDBOX_STOPPED",
+    sandboxId,
+    timestamp: Date.now(),
+  });
 }
 
 export async function writeFile(

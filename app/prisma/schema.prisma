@@ -112,6 +112,7 @@ model Sandbox {
   template  String
   status    String
   createdAt DateTime @default(now())
+  startedAt DateTime?
   stoppedAt DateTime?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -126,4 +127,22 @@ model UsageEvent {
   cost      Decimal
   reason    String
   createdAt DateTime @default(now())
+}
+
+model SandboxMetric {
+  id        String   @id @default(cuid())
+  sandboxId String
+  cpu       Float
+  memory    Float
+  disk      Float
+  timestamp DateTime
+  @@index([timestamp])
+}
+
+model SandboxEvent {
+  id        String   @id @default(cuid())
+  sandboxId String
+  type      String
+  payload   Json
+  timestamp DateTime
 }

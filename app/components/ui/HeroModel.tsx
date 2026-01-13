@@ -24,7 +24,7 @@ function Model() {
 
   const isMobile = useIsMobile();
 
-  const initialRot = useRef(new THREE.Euler(0, 5, 0));
+  const initialRot = useRef(new THREE.Euler(9, 5, 9));
 
   const lastMoveTime = useRef<number>(performance.now());
   const prevMouse = useRef({ x: 0, y: 0 });
