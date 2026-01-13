@@ -29,26 +29,36 @@ function Model() {
   const lastMoveTime = useRef<number>(performance.now());
   const prevMouse = useRef({ x: 0, y: 0 });
 
+  const mouse = useRef({ x: 0, y: 0 });
+
   useEffect(() => {
     if (!ref.current) return;
     ref.current.rotation.copy(initialRot.current);
   }, []);
 
-  useFrame((state, delta) => {
+  useEffect(() => {
+    if (isMobile) return;
+
+    const onMove = (e: PointerEvent) => {
+      mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mouse.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    };
+
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onMove);
+  }, [isMobile]);
+
+  useFrame((_, delta) => {
     if (!ref.current) return;
 
     if (isMobile) {
-      ref.current.rotation.y += delta * 0.6; // speed
-      ref.current.rotation.x = THREE.MathUtils.lerp(
-        ref.current.rotation.x,
-        0,
-        0.08
-      );
+      ref.current.rotation.y += delta * 0.6;
+      ref.current.rotation.x = THREE.MathUtils.lerp(ref.current.rotation.x, 0, 0.08);
       return;
     }
 
-    const mx = state.mouse.x;
-    const my = state.mouse.y;
+    const mx = mouse.current.x;
+    const my = mouse.current.y;
 
     const moved =
       Math.abs(mx - prevMouse.current.x) > 0.0005 ||
@@ -62,46 +72,30 @@ function Model() {
     const idleForMs = performance.now() - lastMoveTime.current;
 
     if (idleForMs > 1000) {
-      ref.current.rotation.x = THREE.MathUtils.lerp(
-        ref.current.rotation.x,
-        initialRot.current.x,
-        0.06
-      );
-      ref.current.rotation.y = THREE.MathUtils.lerp(
-        ref.current.rotation.y,
-        initialRot.current.y,
-        0.06
-      );
+      ref.current.rotation.x = THREE.MathUtils.lerp(ref.current.rotation.x, initialRot.current.x, 0.06);
+      ref.current.rotation.y = THREE.MathUtils.lerp(ref.current.rotation.y, initialRot.current.y, 0.06);
     } else {
       const targetY = mx * 0.7;
       const targetX = -my * 0.35;
 
-      ref.current.rotation.y = THREE.MathUtils.lerp(
-        ref.current.rotation.y,
-        targetY,
-        0.08
-      );
-      ref.current.rotation.x = THREE.MathUtils.lerp(
-        ref.current.rotation.x,
-        targetX,
-        0.08
-      );
+      ref.current.rotation.y = THREE.MathUtils.lerp(ref.current.rotation.y, targetY, 0.08);
+      ref.current.rotation.x = THREE.MathUtils.lerp(ref.current.rotation.x, targetX, 0.08);
     }
   });
 
   return (
-  <primitive
-    ref={ref}
-    object={scene}
-    position={[1.5, 1.2, 0]}
-  />
-);
-
+    <primitive
+      ref={ref}
+      object={scene}
+      position={[1.5, 1.2, 0]}
+    />
+  );
 }
+
 
 export default function HeroModel() {
   return (
-    <div className="w-full h-screen absolute inset-0">
+    <div className="w-96 h-[25rem] inset-0 z-50 ">
       <Canvas
         camera={{ position: [-1, -0.5, 5], fov: 40 }}
         gl={{ antialias: true, alpha: true }}
@@ -113,7 +107,7 @@ export default function HeroModel() {
         <directionalLight position={[5, 5, 5]} intensity={5} />
         <Environment preset="city" />
 
-        <Bounds fit clip observe margin={2.8}>
+        <Bounds fit clip observe margin={1.2}>
           <Model />
         </Bounds>
       </Canvas>
