@@ -4,6 +4,7 @@ import { GrainGradient } from "@paper-design/shaders-react";
 import { auth } from "@/utils/auth-helpers";
 import { headers } from "next/headers";
 import Link from "next/link";
+import Image from "next/image";
 const josefin = Josefin_Sans({
   subsets: ["latin"],
   weight: ["300", "400", "600", "700"],
@@ -22,12 +23,19 @@ export default function Page() {
         <div className="relative h-full pt-4 z-10 flex flex-col px-6 md:px-12 max-w-7xl mx-auto justify-between">
           <header className="flex justify-between items-center">
             <Link href={"/"}>
-              <div className="text-xl cursor-pointer tracking-wide text-neutral-200">
-                Vyoma
+              <div className="text-xl cursor-pointer tracking-wide text-neutral-200 flex items-center gap-1.5">
+                <Image
+                  alt=""
+                  src={"/logo.svg"}
+                  height={200}
+                  width={200}
+                  className="size-[1.5rem]"
+                ></Image>
+                <p className="text-white mt-0.5">Vyoma</p>
               </div>
             </Link>
             {session?.user ? (
-              <Link href={"/dashboard"}>
+              <Link href={"/dashboard/monitor"}>
                 <button className="bg-neutral-200 text-black cursor-pointer px-6 py-2 rounded font-medium hover:bg-neutral-200 transition-colors text-sm md:text-base">
                   DashBoard
                 </button>

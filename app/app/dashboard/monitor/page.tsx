@@ -58,19 +58,14 @@ export default function MonitorPage() {
   return (
     <main className="flex flex-col gap-8 bg-background p-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Monitoring</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Sandbox infrastructure overview
           </p>
         </div>
-        <Link
-          href="/dashboard/list"
-          className="text-sm text-blue-500 hover:text-blue-400"
-        >
-          View Sandboxes →
-        </Link>
+        
       </div>
 
       {/* KPI Cards */}

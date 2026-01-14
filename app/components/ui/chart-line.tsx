@@ -18,6 +18,7 @@ export function ChartLine({ data, title, valueLabel = "Value" }: ChartLineProps)
           <XAxis dataKey="time" stroke="hsl(var(--color-muted-foreground))" style={{ fontSize: "12px" }} />
           <YAxis stroke="hsl(var(--color-muted-foreground))" style={{ fontSize: "12px" }} />
           <Tooltip
+          
             contentStyle={{
               backgroundColor: "hsl(var(--color-card))",
               border: "1px solid hsl(var(--color-border))",

@@ -21,7 +21,7 @@ export async function GET() {
       id: true,
       name: true,
       createdAt: true,
-      lastUsedAt: true,
+      expiresAt: true,
     },
     orderBy: { createdAt: "desc" },
   });

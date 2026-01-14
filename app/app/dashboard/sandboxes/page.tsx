@@ -52,19 +52,14 @@ export default function SandboxListPage() {
   return (
     <main className="flex flex-col gap-8 bg-background p-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Sandboxes</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Active sandbox instances
           </p>
         </div>
-        <Link
-          href="/dashboard"
-          className="text-sm text-blue-500 hover:text-blue-400"
-        >
-          ← Back to Monitoring
-        </Link>
+        
       </div>
 
       {/* Filters */}
