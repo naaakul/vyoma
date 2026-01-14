@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { generateApiKey, hashApiKey } from "@/lib/api-key";
 import { API_KEY_EXPIRY_OPTIONS, computeExpiry } from "@/lib/api-key-expiry";
-import { getServerSession } from "@/utils/utils/getServerSession";
+import { getServerSession } from "@/utils/getServerSession";
 
 export async function POST(req: Request) {
   const session = await getServerSession();

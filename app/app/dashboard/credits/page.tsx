@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent } from "@/components/ui/card";
-import { getServerSession } from "@/utils/utils/getServerSession";
+import { getServerSession } from "@/utils/getServerSession";
 
 export default async function CreditsPage() {
   const session = await getServerSession();

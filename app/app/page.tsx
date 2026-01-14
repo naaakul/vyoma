@@ -3,19 +3,16 @@ import { Josefin_Sans } from "next/font/google";
 import { GrainGradient } from "@paper-design/shaders-react";
 import Link from "next/link";
 import Image from "next/image";
-import { getServerSession } from "@/utils/utils/getServerSession";
+import { getServerSession } from "@/utils/getServerSession";
 const josefin = Josefin_Sans({
   subsets: ["latin"],
   weight: ["300", "400", "600", "700"],
 });
 
-
 export default async function Page() {
   const session = await getServerSession();
   return (
-    <main
-      className={`min-h-screen flex ${josefin.className} items-center justify-center relative w-full bg-neutra-200`}
-    >
+    <main className="min-h-screen flex  items-center justify-center relative w-full bg-neutra-200">
       <div className="h-screen flex items-center justify-center relative w-full overflow-hidden">
         <div className="relative h-full pt-4 z-10 flex flex-col px-6 md:px-12 max-w-7xl mx-auto justify-between">
           <header className="flex justify-between items-center">
@@ -28,7 +25,9 @@ export default async function Page() {
                   width={200}
                   className="size-[1.5rem]"
                 ></Image>
-                <p className="text-white mt-0.5">Vyoma</p>
+                <p className={`text-white mt-0.5 ${josefin.className}`}>
+                  Vyoma
+                </p>
               </div>
             </Link>
             {session?.user ? (

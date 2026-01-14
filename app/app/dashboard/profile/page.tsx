@@ -1,5 +1,5 @@
 import { LogoutButton } from "@/components/ui/logout-button";
-import { getServerSession } from "@/utils/utils/getServerSession";
+import { getServerSession } from "@/utils/getServerSession";
 
 
 function formatFieldName(key: string): string {
