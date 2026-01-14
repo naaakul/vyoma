@@ -35,6 +35,7 @@ export async function POST(req: Request) {
         userId: user.id,
         template: templateId,
         status: "creating",
+        lastHeartbeatAt: new Date(),
       },
     });
 

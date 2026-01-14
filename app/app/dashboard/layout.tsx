@@ -11,12 +11,19 @@ const navItems = [
   { href: "/dashboard/profile", label: "profile" },
 ];
 
+async function getPathnameFromHeader() {
+  const h = await headers();
+  return h.get("x-pathname") ?? "";
+}
+
 export default async function DashboardLayout({
   children,
 }: {
   children: ReactNode;
 }) {
-  const pathname = (await headers()).get("x-pathname") ?? "";
+  // const pathname = (await headers()).get("x-pathname") ?? "";
+
+  const pathname = await getPathnameFromHeader();
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -25,11 +32,14 @@ export default async function DashboardLayout({
         <div className="flex flex-col gap-8 p-6">
           {/* Branding */}
           <div className="text-sm font-semibold text-foreground flex gap-2.5 items-center">
-            <Image alt="" src={"/logo.svg"} height={200} width={200} className="size-[1.2rem]"></Image>
-            <p>
-
-            Vyoma Dashboard
-            </p>
+            <Image
+              alt=""
+              src={"/logo.svg"}
+              height={200}
+              width={200}
+              className="size-[1.2rem]"
+            ></Image>
+            <p>Vyoma Dashboard</p>
           </div>
 
           {/* Navigation */}

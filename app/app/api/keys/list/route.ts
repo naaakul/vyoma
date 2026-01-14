@@ -1,12 +1,9 @@
 import { NextResponse } from "next/server";
-import { headers } from "next/headers";
-import { auth } from "@/utils/auth-helpers";
 import { prisma } from "@/lib/prisma";
+import { getServerSession } from "@/utils/utils/getServerSession";
 
 export async function GET() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getServerSession();
 
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

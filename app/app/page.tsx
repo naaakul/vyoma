@@ -1,20 +1,17 @@
 import HeroModel from "@/components/ui/HeroModel";
 import { Josefin_Sans } from "next/font/google";
 import { GrainGradient } from "@paper-design/shaders-react";
-import { auth } from "@/utils/auth-helpers";
-import { headers } from "next/headers";
 import Link from "next/link";
 import Image from "next/image";
+import { getServerSession } from "@/utils/utils/getServerSession";
 const josefin = Josefin_Sans({
   subsets: ["latin"],
   weight: ["300", "400", "600", "700"],
 });
 
-const session = await auth.api.getSession({
-  headers: await headers(),
-});
 
-export default function Page() {
+export default async function Page() {
+  const session = await getServerSession();
   return (
     <main
       className={`min-h-screen flex ${josefin.className} items-center justify-center relative w-full bg-neutra-200`}

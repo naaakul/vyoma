@@ -1,14 +1,11 @@
 import { NextResponse } from "next/server";
-import { headers } from "next/headers";
-import { auth } from "@/utils/auth-helpers";
 import { prisma } from "@/lib/prisma";
 import { generateApiKey, hashApiKey } from "@/lib/api-key";
 import { API_KEY_EXPIRY_OPTIONS, computeExpiry } from "@/lib/api-key-expiry";
+import { getServerSession } from "@/utils/utils/getServerSession";
 
 export async function POST(req: Request) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getServerSession();
 
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

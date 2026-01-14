@@ -1,6 +1,5 @@
-import { headers } from "next/headers";
-import { auth } from "@/utils/auth-helpers";
 import { LogoutButton } from "@/components/ui/logout-button";
+import { getServerSession } from "@/utils/utils/getServerSession";
 
 
 function formatFieldName(key: string): string {
@@ -29,9 +28,7 @@ function useMonospace(key: string) {
 
 
 export default async function ProfilePage() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getServerSession();
 
   if (!session?.user) {
     throw new Error("Unauthorized");

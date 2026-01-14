@@ -1,12 +1,9 @@
-import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
-import { auth } from "@/utils/auth-helpers";
 import { Card, CardContent } from "@/components/ui/card";
+import { getServerSession } from "@/utils/utils/getServerSession";
 
 export default async function CreditsPage() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getServerSession();
 
   if (!session?.user) {
     throw new Error("Unauthorized");
