@@ -147,3 +147,16 @@ model SandboxEvent {
   payload   Json
   timestamp DateTime
 }
+
+model Payment {
+  id            String   @id @default(cuid())
+  provider      String   
+  orderId       String   @unique
+  captureId     String?  @unique
+  amount        Decimal
+  currency      String
+  status        String  
+  rawPayload    Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
