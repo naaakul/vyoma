@@ -39,6 +39,7 @@ model User {
   sessions      Session[]
   apiKeys       ApiKey[]
   sandboxes     Sandbox[]
+  payments      Payment[]
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -149,14 +150,25 @@ model SandboxEvent {
 }
 
 model Payment {
-  id            String   @id @default(cuid())
-  provider      String   
-  orderId       String   @unique
-  captureId     String?  @unique
-  amount        Decimal
-  currency      String
-  status        String  
-  rawPayload    Json?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id              String   @id @default(cuid())
+  userId          String
+  provider        String
+  orderId         String   @unique
+  captureId       String?  @unique
+
+  amount          Decimal
+  currency        String
+
+  creditsGranted  Decimal
+  status          String   // created | captured | failed
+
+  rawPayload      Json?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
+

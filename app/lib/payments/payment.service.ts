@@ -4,25 +4,33 @@ import {
   markPaymentCaptured,
   markPaymentFailed,
 } from "./payment.repo";
+import { prisma } from "../prisma";
 
 const paypal = new PayPalProvider();
 
 export async function createPaypalPayment(
+  userId: string,
   amount: number,
   currency: string
 ) {
   const { orderId, approvalLink } =
-    await paypal.createOrder(amount, currency);
+    await paypal.createOrder(amount, currency)
 
-  await createPayment({
-    provider: "paypal",
-    orderId,
-    amount,
-    currency,
-  });
+  await prisma.payment.create({
+    data: {
+      userId,
+      provider: "paypal",
+      orderId,
+      amount,
+      currency,
+      creditsGranted: amount, 
+      status: "created",
+    },
+  })
 
-  return { orderId, approvalLink };
+  return { orderId, approvalLink }
 }
+
 
 export async function capturePaypalPayment(orderId: string) {
   try {
