@@ -1,36 +1,52 @@
-import { NextResponse } from "next/server";
-import { verifyPaypalWebhook } from "@/lib/paypal/verifyWebhook";
+import { NextResponse } from "next/server"
+import { prisma } from "@/lib/prisma"
+import { verifyPaypalWebhook } from "@/lib/paypal/verifyWebhook"
 
 export async function POST(req: Request) {
-  const body = await req.json();
-  const isValid = await verifyPaypalWebhook(body, req.headers);
+  const body = await req.json()
+  const isValid = await verifyPaypalWebhook(body, req.headers)
 
   if (!isValid) {
-    return NextResponse.json({ error: "Invalid webhook" }, { status: 400 });
+    return NextResponse.json({ error: "Invalid webhook" }, { status: 400 })
   }
 
-  const eventType = body.event_type;
-
-  switch (eventType) {
-    case "PAYMENT.CAPTURE.COMPLETED": {
-      const capture = body.resource;
-      const captureId = capture.id;
-      const amount = capture.amount.value;
-
-      // TODO:
-      // - mark payment as paid in DB
-      // - grant credits / unlock feature
-      // - ensure idempotency (captureId unique)
-
-      break;
-    }
-
-    case "PAYMENT.CAPTURE.DENIED":
-    case "PAYMENT.CAPTURE.FAILED": {
-      // handle failure
-      break;
-    }
+  if (body.event_type !== "PAYMENT.CAPTURE.COMPLETED") {
+    return NextResponse.json({ ok: true })
   }
 
-  return NextResponse.json({ ok: true });
+  const capture = body.resource
+  const captureId = capture.id
+  const orderId =
+    capture.supplementary_data?.related_ids?.order_id
+
+  if (!orderId) return NextResponse.json({ ok: true })
+
+  const payment = await prisma.payment.findUnique({
+    where: { orderId },
+  })
+
+  if (!payment || payment.status === "captured") {
+    return NextResponse.json({ ok: true })
+  }
+
+  await prisma.$transaction([
+    prisma.payment.update({
+      where: { orderId },
+      data: {
+        status: "captured",
+        captureId,
+        rawPayload: body,
+      },
+    }),
+    prisma.user.update({
+      where: { id: payment.userId },
+      data: {
+        credits: {
+          increment: payment.creditsGranted,
+        },
+      },
+    }),
+  ])
+
+  return NextResponse.json({ ok: true })
 }

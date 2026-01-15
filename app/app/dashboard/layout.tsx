@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { headers } from "next/headers";
 import Image from "next/image";
+import { redirect } from "next/navigation";
+import { getServerSession } from "@/utils/getServerSession";
 
 const navItems = [
   { href: "/dashboard/monitor", label: "Monitoring" },
@@ -21,6 +23,8 @@ export default async function DashboardLayout({
 }: {
   children: ReactNode;
 }) {
+  const session = await getServerSession();
+  if (!session?.user) redirect("/auth/sign-in");
   // const pathname = (await headers()).get("x-pathname") ?? "";
 
   const pathname = await getPathnameFromHeader();

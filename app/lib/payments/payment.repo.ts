@@ -1,11 +1,18 @@
 import { prisma } from "@/lib/prisma";
+import type { Prisma } from "@prisma/client";
 
-export async function createPayment(data: {
+type CreatePaymentInput = {
+  userId: string;
   provider: string;
   orderId: string;
-  amount: number;
+
+  amount: Prisma.Decimal;
   currency: string;
-}) {
+
+  creditsGranted: Prisma.Decimal;
+};
+
+export async function createPayment(data: CreatePaymentInput) {
   return prisma.payment.create({
     data: {
       provider: data.provider,
@@ -13,6 +20,11 @@ export async function createPayment(data: {
       amount: data.amount,
       currency: data.currency,
       status: "created",
+
+      creditsGranted: data.creditsGranted,
+      user: {
+        connect: { id: data.userId },
+      },
     },
   });
 }
