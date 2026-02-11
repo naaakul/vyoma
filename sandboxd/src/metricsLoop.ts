@@ -1,4 +1,4 @@
-import { emitMetrics } from "./events";
+import { emitMetrics } from "./events.js";
 
 export function startMetricsLoop(getRunningSandboxes: () => any[]) {
   setInterval(async () => {

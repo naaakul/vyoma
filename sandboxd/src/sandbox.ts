@@ -1,5 +1,5 @@
-import { run } from "./docker";
-import { emitEvent } from "./events";
+import { run } from "./docker.js";
+import { emitEvent } from "./events.js";
 
 export async function startSandbox(
   sandboxId: string,
