@@ -7,7 +7,7 @@ import {
   writeFile,
   execCommand,
   sandboxStatus,
-} from "./sandbox";
+} from "./sandbox.js";
 
 const app = new Hono();
 
