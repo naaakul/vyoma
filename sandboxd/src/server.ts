@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { serve } from "@hono/node-server";
+import { cors } from "hono/cors";
 
 import {
   startSandbox,
@@ -11,9 +12,20 @@ import {
 
 const app = new Hono();
 
+app.use(
+  "*",
+  cors({
+    origin: "https://vyoma.nakul.space",
+    allowMethods: ["GET", "POST", "OPTIONS"],
+    allowHeaders: ["Content-Type"],
+  })
+);
+
 app.post("/sandbox/run", async (c) => {
   console.log("request recieved");
+
   const { sandboxId, image, port } = await c.req.json();
+
   if (!sandboxId || !image || !port) {
     return c.json({ error: "missing fields" }, 400);
   }
@@ -36,9 +48,7 @@ app.post("/sandbox/write", async (c) => {
 
 app.post("/sandbox/exec", async (c) => {
   const { sandboxId, command, cwd } = await c.req.json();
-
   const result = await execCommand(sandboxId, command, cwd);
-
   return c.json(result);
 });
 
