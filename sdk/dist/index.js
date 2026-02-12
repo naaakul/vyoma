@@ -31,7 +31,7 @@ var SandboxResource = class {
   }
   create(data) {
     return this.client.request(
-      "/sandbox/create",
+      "/api/sandbox/create",
       {
         method: "POST",
         body: JSON.stringify(data)
@@ -40,7 +40,7 @@ var SandboxResource = class {
   }
   stop(sandboxId) {
     return this.client.request(
-      "/sandbox/stop",
+      "/api/sandbox/stop",
       {
         method: "POST",
         body: JSON.stringify({ sandboxId })
@@ -49,7 +49,7 @@ var SandboxResource = class {
   }
   status(sandboxId) {
     return this.client.request(
-      `/sandbox/status?sandboxId=${sandboxId}`,
+      `/api/sandbox/status?sandboxId=${sandboxId}`,
       {
         method: "GET"
       }
@@ -57,7 +57,7 @@ var SandboxResource = class {
   }
   write(sandboxId, path, content) {
     return this.client.request(
-      "/sandbox/write",
+      "/api/sandbox/write",
       {
         method: "POST",
         body: JSON.stringify({
@@ -70,7 +70,7 @@ var SandboxResource = class {
   }
   exec(sandboxId, command, cwd) {
     return this.client.request(
-      "/sandbox/exec",
+      "/api/sandbox/exec",
       {
         method: "POST",
         body: JSON.stringify({
@@ -101,7 +101,7 @@ var VyomaClient = class {
       throw new Error("Vyoma API key is required");
     }
     this.apiKey = options.apiKey;
-    this.baseUrl = options.baseUrl ?? "https://api.vyoma.dev";
+    this.baseUrl = options.baseUrl ?? "http://sandboxd.nakul.space";
   }
   async request(path, options = {}) {
     const res = await fetch(`${this.baseUrl}${path}`, {

@@ -3,7 +3,7 @@ export async function callSandboxd(path: string, body: unknown) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-internal-secret": process.env.SANDBOXD_SECRET!,
+      "x-internal-secret": process.env.SANDBOX_SHARED_SECRET!,
     },
     body: JSON.stringify(body),
   });

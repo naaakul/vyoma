@@ -13,7 +13,7 @@ export class SandboxResource {
 
   create(data: SandboxCreateRequest) {
     return this.client.request<SandboxCreateResponse>(
-      "/sandbox/create",
+      "/api/sandbox/create",
       {
         method: "POST",
         body: JSON.stringify(data),
@@ -23,7 +23,7 @@ export class SandboxResource {
 
   stop(sandboxId: string) {
     return this.client.request<SandboxStopResponse>(
-      "/sandbox/stop",
+      "/api/sandbox/stop",
       {
         method: "POST",
         body: JSON.stringify({ sandboxId }),
@@ -33,7 +33,7 @@ export class SandboxResource {
 
   status(sandboxId: string) {
     return this.client.request<SandboxStatusResponse>(
-      `/sandbox/status?sandboxId=${sandboxId}`,
+      `/api/sandbox/status?sandboxId=${sandboxId}`,
       {
         method: "GET",
       }
@@ -46,7 +46,7 @@ export class SandboxResource {
     content: string
   ) {
     return this.client.request<SandboxWriteResponse>(
-      "/sandbox/write",
+      "/api/sandbox/write",
       {
         method: "POST",
         body: JSON.stringify({
@@ -64,7 +64,7 @@ export class SandboxResource {
     cwd?: string
   ) {
     return this.client.request<SandboxExecResponse>(
-      "/sandbox/exec",
+      "/api/sandbox/exec",
       {
         method: "POST",
         body: JSON.stringify({
