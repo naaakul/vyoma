@@ -17,17 +17,11 @@ export async function POST(req: Request) {
     const { templateId, timeout } = body;
 
     if (!templateId) {
-      return Response.json(
-        { error: "template is required" },
-        { status: 400 }
-      );
+      return Response.json({ error: "template is required" }, { status: 400 });
     }
 
     if (user.credits.toNumber() <= 0) {
-      return Response.json(
-        { error: "Insufficient credits" },
-        { status: 402 }
-      );
+      return Response.json({ error: "Insufficient credits" }, { status: 402 });
     }
 
     const sandbox = await prisma.sandbox.create({
@@ -44,6 +38,8 @@ export async function POST(req: Request) {
       image: templateId,
       port: 3000,
     });
+
+    const data = await res.json();
 
     if (!res.ok) {
       const text = await res.text();
@@ -62,7 +58,7 @@ export async function POST(req: Request) {
       reason: "sandbox.create",
     });
 
-    return Response.json({ sandboxId: sandbox.id });
+    return Response.json(data);
   } catch (err: any) {
     console.error("CREATE_SANDBOX_FATAL_ERROR");
     console.error(err);

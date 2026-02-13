@@ -1,6 +1,8 @@
 import { run } from "./docker.js";
 import { emitEvent } from "./events.js";
 
+const DOMAIN = "vyoma.sbs";
+
 export async function startSandbox(
   sandboxId: string,
   image: string,
@@ -9,28 +11,28 @@ export async function startSandbox(
   console.log("startSandbox", { sandboxId, image, containerPort });
 
   await run(
-    `docker run -d --name ${sandboxId} -p 0:${containerPort} ${image}`
-  );
-
-  const port = await run(
-    `docker port ${sandboxId} ${containerPort}`
+    `docker run -d \
+    --name ${sandboxId} \
+    -e VIRTUAL_HOST=${sandboxId}.${DOMAIN} \
+    ${image}`
   );
 
   await emitEvent({
     type: "SANDBOX_STARTED",
     sandboxId,
     image,
+    url: `http://${sandboxId}.${DOMAIN}`,
     timestamp: Date.now(),
   });
 
-  const hostPort = port.split(":").pop()?.trim();
-
-  return { hostPort };
+  return {
+    url: `http://${sandboxId}.${DOMAIN}`,
+  };
 }
-
 
 export async function stopSandbox(sandboxId: string) {
   await run(`docker rm -f ${sandboxId}`);
+
   await emitEvent({
     type: "SANDBOX_STOPPED",
     sandboxId,
@@ -49,7 +51,6 @@ export async function writeFile(
     `docker exec ${sandboxId} sh -c "mkdir -p $(dirname ${path}) && echo \\"${escaped}\\" > ${path}"`
   );
 }
-
 
 export async function execCommand(
   sandboxId: string,
@@ -76,8 +77,6 @@ export async function execCommand(
     };
   }
 }
-
-
 
 export async function sandboxStatus(sandboxId: string) {
   try {
