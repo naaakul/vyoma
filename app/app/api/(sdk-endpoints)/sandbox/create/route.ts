@@ -39,10 +39,8 @@ export async function POST(req: Request) {
       port: 3000,
     });
 
-    const text = await res.text();
-    console.log(text);
-
     const data = await res.json();
+    console.log(data);
 
     if (!res.ok) {
       const text = await res.text();
