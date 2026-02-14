@@ -12,10 +12,12 @@ import {
 
 const app = new Hono();
 
+const INTERNAL_BACKEND_URL = process.env.INTERNAL_BACKEND_URL!;
+
 app.use(
   "*",
   cors({
-    origin: "https://vyoma.nakul.space",
+    origin: INTERNAL_BACKEND_URL,
     allowMethods: ["GET", "POST", "OPTIONS"],
     allowHeaders: ["Content-Type"],
   })

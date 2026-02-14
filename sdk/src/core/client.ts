@@ -16,7 +16,7 @@ export class VyomaClient {
     }
 
     this.apiKey = options.apiKey;
-    this.baseUrl = options.baseUrl ?? "http://sandboxd.nakul.space";
+    this.baseUrl = options.baseUrl ?? "http://sandboxd.vyoma.sbs";
   }
 
   async request<T>(path: string, options: RequestInit = {}): Promise<T> {
@@ -34,7 +34,7 @@ export class VyomaClient {
       throw new VyomaError(
         data?.error ?? "Vyoma API error",
         res.status,
-        data?.code
+        data?.code,
       );
     }
 
