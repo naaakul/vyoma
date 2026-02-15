@@ -4,6 +4,7 @@ import { GrainGradient } from "@paper-design/shaders-react";
 import Link from "next/link";
 import Image from "next/image";
 import { getServerSession } from "@/utils/getServerSession";
+import CopyInstallCommand from "@/components/ui/copy-install-command";
 const josefin = Josefin_Sans({
   subsets: ["latin"],
   weight: ["300", "400", "600", "700"],
@@ -57,16 +58,10 @@ export default async function Page() {
               </p>
 
               <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-20">
-                <div className="relative group">
-                  <div className="absolute inset-0 border border-dashed border-neutral-400 rounded-md bg-black backdrop-blur-xs"></div>
-                  <div className="relative px-6 py-3 font-mono text-sm md:text-base text-neutral-200 flex items-center gap-2">
-                    <span>npm i vyoma</span>
-                    {/* <div className="w-2 h-4 bg-neutral-400 animate-pulse inline-block ml-1"></div> */}
-                  </div>
-                </div>
+                <CopyInstallCommand />
 
                 <div className="flex gap-4 mt-4 md:mt-0">
-                  <Link href={"/docs"}>
+                  <Link href={"/docs/authentication"}>
                     <button className="bg-neutral-200 text-black backdrop-blur-xs cursor-pointer text-neutra-200 px-6 py-3 rounded-md text-sm md:text-base transition-all">
                       Read the Docs
                     </button>
@@ -97,8 +92,9 @@ export default async function Page() {
           </footer>
         </div>
         <div className="absolute h-full w-full">
+          <div className="absolute h-full w-full z-[2] bg-black/20 backdrop-blur-xl"></div>
           <GrainGradient
-            className="h-full w-full"
+            className="h-full w-full -z-[1]"
             colors={["#ffffff", "#000829"]}
             colorBack="#000a0f"
             softness={1}

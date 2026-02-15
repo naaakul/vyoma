@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -50,6 +51,12 @@
 @layer utilities {
   .font-jose {
     font-family: "Josefin Sans", sans-serif;
+  }
+}
+
+@layer base {
+  .font-instru {
+    font-family: "Instrument Serif", serif;
   }
 }
 
