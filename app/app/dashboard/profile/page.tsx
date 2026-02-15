@@ -112,7 +112,7 @@ export default async function ProfilePage() {
 
       {/* Footer */}
       <div className="border-t border-border pt-6 text-xs text-muted-foreground">
-        This information is read-only and managed by Better Auth.
+        This information is read-only
       </div>
     </main>
   );

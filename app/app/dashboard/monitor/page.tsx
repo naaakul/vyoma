@@ -95,9 +95,6 @@ export default function MonitorPage() {
       {/* Live Badge */}
       <div className="flex items-center gap-2">
         <LiveBadge isLive={isLive} />
-        <span className="text-xs text-muted-foreground">
-          {isLive ? "LIVE" : "STALE"}
-        </span>
       </div>
 
       {/* Chart */}

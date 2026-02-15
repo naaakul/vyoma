@@ -6,11 +6,11 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "@/utils/getServerSession";
 
 const navItems = [
-  { href: "/dashboard/monitor", label: "Monitoring" },
-  { href: "/dashboard/sandboxes", label: "Sandboxes" },
-  { href: "/dashboard/keys", label: "API Keys" },
-  { href: "/dashboard/credits", label: "Credits" },
   { href: "/dashboard/profile", label: "profile" },
+  { href: "/dashboard/keys", label: "API Keys" },
+  { href: "/dashboard/sandboxes", label: "Sandboxes" },
+  { href: "/dashboard/monitor", label: "Monitoring" },
+  { href: "/dashboard/credits", label: "Credits" },
 ];
 
 async function getPathnameFromHeader() {
