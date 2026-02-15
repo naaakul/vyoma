@@ -16,7 +16,7 @@ export class VyomaClient {
     }
 
     this.apiKey = options.apiKey;
-    this.baseUrl = options.baseUrl ?? "http://sandboxd.vyoma.sbs";
+    this.baseUrl = options.baseUrl ?? "https://vyoma.sbs";
   }
 
   async request<T>(path: string, options: RequestInit = {}): Promise<T> {

@@ -1,7 +1,7 @@
 import { ID, ISODate } from "./core";
 
 /* =====================
-   Requests
+   Requests ✅ (RESTORED)
 ===================== */
 
 export interface SandboxCreateRequest {
@@ -48,8 +48,10 @@ export interface Sandbox {
   url?: string;
 }
 
+/* ✅ FIXED CREATE RESPONSE */
 export interface SandboxCreateResponse {
-  sandbox: Sandbox;
+  sandboxId: ID;
+  url: string;
 }
 
 export interface SandboxStopResponse {

@@ -101,7 +101,7 @@ var VyomaClient = class {
       throw new Error("Vyoma API key is required");
     }
     this.apiKey = options.apiKey;
-    this.baseUrl = options.baseUrl ?? "http://sandboxd.nakul.space";
+    this.baseUrl = options.baseUrl ?? "https://vyoma.sbs";
   }
   async request(path, options = {}) {
     const res = await fetch(`${this.baseUrl}${path}`, {

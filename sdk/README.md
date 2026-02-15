@@ -8,17 +8,14 @@ The SDK is fully typed, lightweight, and designed to work cleanly with modern No
 
 ## Installation
 
-```bash
 npm install vyoma
-```
 
 ---
 
 ## Quick Start
 
-This is the minimum working example to verify the SDK is installed and usable.
+Minimum working example to verify installation and SDK behavior.
 
-```ts
 import { VyomaClient } from "vyoma";
 
 const vyoma = new VyomaClient({
@@ -26,13 +23,12 @@ const vyoma = new VyomaClient({
 });
 
 // Create a sandbox
-const { sandbox } = await vyoma.sandbox.create({
+const sandbox = await vyoma.sandbox.create({
   templateId: "nextjs-preview",
   timeout: 600,
 });
 
-console.log(sandbox.id, sandbox.status);
-```
+console.log(sandbox.sandboxId, sandbox.url);
 
 If this runs and you get autocomplete, the SDK is working correctly.
 
@@ -40,47 +36,78 @@ If this runs and you get autocomplete, the SDK is working correctly.
 
 ## Configuration
 
-### VyomaClient
+VyomaClient
 
-```ts
 new VyomaClient({
   apiKey: string;        // required
-  baseUrl?: string;     // optional, defaults to Vyoma API
+  baseUrl?: string;      // optional, defaults to Vyoma API
 });
-```
 
 Example:
 
-```ts
 const vyoma = new VyomaClient({
   apiKey: "vk_live_xxx",
 });
-```
 
 ---
 
 ## Sandbox API
 
-### Create Sandbox
+Create Sandbox
 
-```ts
-const response = await vyoma.sandbox.create({
+Creates a new sandbox instance.
+
+const sandbox = await vyoma.sandbox.create({
   templateId: "nextjs-preview",
   timeout: 600,
 });
-```
 
-### Stop Sandbox
+console.log(sandbox.sandboxId);
+console.log(sandbox.url);
 
-```ts
+---
+
+Stop Sandbox
+
+Stops an active sandbox.
+
 await vyoma.sandbox.stop("sandbox_id");
-```
 
-### Get Sandbox Status
+---
 
-```ts
+Get Sandbox Status
+
+Fetches the current sandbox state.
+
 const status = await vyoma.sandbox.status("sandbox_id");
-```
+
+console.log(status.status);
+
+---
+
+Write File
+
+Writes content into a sandbox file.
+
+await vyoma.sandbox.write(
+  "sandbox_id",
+  "/app/page.tsx",
+  "export default function Page() { return <div>Hello</div>; }"
+);
+
+---
+
+Execute Command
+
+Runs a shell command inside the sandbox.
+
+const result = await vyoma.sandbox.exec(
+  "sandbox_id",
+  "npm install"
+);
+
+console.log(result.stdout);
+console.log(result.stderr);
 
 ---
 
@@ -88,7 +115,7 @@ const status = await vyoma.sandbox.status("sandbox_id");
 
 The Vyoma SDK is fully typed.
 
-All request payloads and responses are strict TypeScript contracts that mirror the Vyoma API.
+All request payloads and responses are strict TypeScript contracts aligned with SDK runtime behavior.
 This enables autocomplete, compile-time validation, and safe refactoring.
 
 ---

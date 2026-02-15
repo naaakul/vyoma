@@ -35,7 +35,8 @@ interface Sandbox {
     url?: string;
 }
 interface SandboxCreateResponse {
-    sandbox: Sandbox;
+    sandboxId: ID;
+    url: string;
 }
 interface SandboxStopResponse {
     sandboxId: ID;
