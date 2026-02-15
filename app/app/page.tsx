@@ -61,7 +61,7 @@ export default async function Page() {
                 <CopyInstallCommand />
 
                 <div className="flex gap-4 mt-4 md:mt-0">
-                  <Link href={"/docs/authentication"}>
+                  <Link href={"/docs/introduction"}>
                     <button className="bg-neutral-200 text-black backdrop-blur-xs cursor-pointer text-neutra-200 px-6 py-3 rounded-md text-sm md:text-base transition-all">
                       Read the Docs
                     </button>

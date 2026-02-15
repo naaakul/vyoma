@@ -1,25 +1,25 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Menu, X } from "lucide-react"
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Menu, X } from "lucide-react";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { docsConfig } from "@/lib/docs-config"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { docsConfig } from "@/lib/docs-config";
 
 export function DocsSidebar() {
-  const pathname = usePathname()
-  const [isOpen, setIsOpen] = useState(false)
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
 
   // Close sidebar automatically on route change (mobile UX)
   useEffect(() => {
-    setIsOpen(false)
-  }, [pathname])
+    setIsOpen(false);
+  }, [pathname]);
 
   return (
-    <>
+    <div className="">
       {/* Mobile toggle button */}
       <div className="fixed top-4 left-4 z-50 md:hidden">
         <Button
@@ -28,22 +28,19 @@ export function DocsSidebar() {
           aria-label="Toggle documentation sidebar"
           onClick={() => setIsOpen((v) => !v)}
         >
-          {isOpen ? (
-            <X className="h-4 w-4" />
-          ) : (
-            <Menu className="h-4 w-4" />
-          )}
+          {isOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
         </Button>
       </div>
 
       {/* Sidebar */}
       <aside
+      style={{scrollbarWidth: "thin", scrollbarColor: "#373737 #0a0a0a"}}
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-64 border-r border-border bg-background",
+          "fixed inset-y-0 left-0 z-40 w-64 border-r border-border bg-background mt-16",
           "pt-16 md:pt-0",
           "overflow-y-auto transition-transform duration-300",
           isOpen ? "translate-x-0" : "-translate-x-full",
-          "md:translate-x-0"
+          "md:translate-x-0",
         )}
       >
         <nav className="space-y-6 px-4 py-6">
@@ -55,7 +52,7 @@ export function DocsSidebar() {
 
               <div className="space-y-1">
                 {section.items?.map((item) => {
-                  const active = pathname === item.href
+                  const active = pathname === item.href;
 
                   return (
                     <Link
@@ -65,12 +62,12 @@ export function DocsSidebar() {
                         "block rounded-md px-2 py-1.5 text-sm transition-colors",
                         active
                           ? "bg-primary text-primary-foreground font-medium"
-                          : "text-foreground/70 hover:bg-secondary hover:text-foreground"
+                          : "text-foreground/70 hover:bg-secondary hover:text-foreground",
                       )}
                     >
                       {item.title}
                     </Link>
-                  )
+                  );
                 })}
               </div>
             </div>
@@ -85,6 +82,6 @@ export function DocsSidebar() {
           onClick={() => setIsOpen(false)}
         />
       )}
-    </>
-  )
+    </div>
+  );
 }

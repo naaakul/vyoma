@@ -4,14 +4,14 @@ import { Callout } from "@/components/docs/callout"
 export default function SandboxesPage() {
   return (
     <div className="prose prose-invert max-w-none">
-      <h1 id="sandboxes">Sandboxes</h1>
+      <h1 className="heading-anchor" id="sandboxes">Sandboxes</h1>
 
       <p className="text-lg text-foreground/80 mt-4">
         Sandboxes are isolated execution environments where your code runs safely
         and independently.
       </p>
 
-      <h2 id="what-is-a-sandbox">What is a sandbox?</h2>
+      <h2 className="heading-anchor" id="what-is-a-sandbox">What is a sandbox?</h2>
 
       <p>
         Each Vyoma sandbox runs in its own container with a dedicated filesystem
@@ -19,7 +19,7 @@ export default function SandboxesPage() {
         commands over time.
       </p>
 
-      <h2 id="key-features">Key features</h2>
+      <h2 className="heading-anchor" id="key-features">Key features</h2>
 
       <ul>
         <li>Strong isolation using containers</li>
@@ -29,7 +29,7 @@ export default function SandboxesPage() {
         <li>Time-based automatic shutdown</li>
       </ul>
 
-      <h2 id="creating-a-sandbox">Creating a sandbox</h2>
+      <h2 className="heading-anchor" id="creating-a-sandbox">Creating a sandbox</h2>
 
       <CodeBlock
         language="ts"
@@ -44,7 +44,7 @@ export default function SandboxesPage() {
         Python, Go, etc.). More templates will be added over time.
       </Callout>
 
-      <h2 id="sandbox-status">Checking sandbox status</h2>
+      <h2 className="heading-anchor" id="sandbox-status">Checking sandbox status</h2>
 
       <CodeBlock
         language="ts"
@@ -53,7 +53,7 @@ export default function SandboxesPage() {
 console.log(status.status) // "starting" | "running" | "stopped"`}
       />
 
-      <h2 id="executing-commands">Executing commands</h2>
+      <h2 className="heading-anchor" id="executing-commands">Executing commands</h2>
 
       <CodeBlock
         language="ts"
@@ -65,7 +65,7 @@ console.log(status.status) // "starting" | "running" | "stopped"`}
 console.log(result.stdout)`}
       />
 
-      <h2 id="writing-files">Writing files</h2>
+      <h2 className="heading-anchor" id="writing-files">Writing files</h2>
 
       <CodeBlock
         language="ts"
@@ -83,7 +83,7 @@ const result = await client.sandbox.exec(
 console.log(result.stdout)`}
       />
 
-      <h2 id="stopping-a-sandbox">Stopping a sandbox</h2>
+      <h2 className="heading-anchor" id="stopping-a-sandbox">Stopping a sandbox</h2>
 
       <CodeBlock
         language="ts"

@@ -4,17 +4,17 @@ import { Callout } from "@/components/docs/callout"
 export default function QuickstartPage() {
   return (
     <div className="prose prose-invert max-w-none">
-      <h1 id="quickstart">Quickstart</h1>
+      <h1 className="heading-anchor" id="quickstart">Quickstart</h1>
 
       <p className="text-lg text-foreground/80 mt-4">
         Get up and running with Vyoma in minutes.
       </p>
 
-      <h2 id="install">Install the SDK</h2>
+      <h2 className="heading-anchor" id="install">Install the SDK</h2>
 
       <CodeBlock language="bash" code={`npm install vyoma`} />
 
-      <h2 id="setup-client">Create a client</h2>
+      <h2 className="heading-anchor" id="setup-client">Create a client</h2>
 
       <CodeBlock
         language="ts"
@@ -26,7 +26,7 @@ const client = new VyomaClient({
         filename="client.ts"
       />
 
-      <h2 id="create-sandbox">Create a sandbox</h2>
+      <h2 className="heading-anchor" id="create-sandbox">Create a sandbox</h2>
 
       <CodeBlock
         language="ts"
@@ -39,7 +39,7 @@ console.log("Sandbox ID:", sandbox.id)`}
         filename="sandbox.ts"
       />
 
-      <h2 id="execute-code">Execute code</h2>
+      <h2 className="heading-anchor" id="execute-code">Execute code</h2>
 
       <CodeBlock
         language="ts"
@@ -52,7 +52,7 @@ console.log(result.stdout)`}
         filename="exec.ts"
       />
 
-      <h2 id="write-files">Write files</h2>
+      <h2 className="heading-anchor" id="write-files">Write files</h2>
 
       <CodeBlock
         language="ts"
@@ -71,7 +71,7 @@ console.log(result.stdout)`}
         filename="files.ts"
       />
 
-      <h2 id="cleanup">Stop the sandbox</h2>
+      <h2 className="heading-anchor" id="cleanup">Stop the sandbox</h2>
 
       <CodeBlock
         language="ts"

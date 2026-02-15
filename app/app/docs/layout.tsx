@@ -24,12 +24,12 @@ export default function DocsLayout({
         <DocsSidebar />
 
         <main className="relative flex-1 md:ml-64">
-          <div className="mx-auto max-w-3xl px-4 py-10 md:px-6 md:py-14">
+          <div className="mx-auto max-w-3xl px-4 py-10 md:px-6 md:py-14 mt-16">
             {children}
           </div>
 
           {/* Right-side table of contents */}
-          <TableOfContents />
+          {/* <TableOfContents /> */}
         </main>
       </div>
     </div>

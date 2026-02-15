@@ -60,6 +60,11 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+
 .halo-gradient {
   position: absolute;
   inset: -20%;
@@ -159,6 +164,11 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
+
+.heading-anchor {
+  scroll-margin-top: 40vh;
+}
+
 
 @layer base {
   * {
