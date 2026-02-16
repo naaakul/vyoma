@@ -92,7 +92,7 @@ export default async function Page() {
           </footer>
         </div>
         <div className="absolute h-full w-full">
-          <div className="absolute h-full w-full z-[2] bg-black/20 backdrop-blur-xl"></div>
+          {/* <div className="absolute h-full w-full z-[2] bg-black/20 backdrop-blur-xl"></div>
           <GrainGradient
             className="h-full w-full -z-[1]"
             colors={["#ffffff", "#000829"]}
@@ -104,6 +104,25 @@ export default async function Page() {
             speed={1.74}
             scale={2.52}
             offsetX={0.68}
+          /> */}
+          {/* <div className="absolute inset-0 z-[2] bg-gradient-to-t from-black/40 to-transparent rounded-xl"/> */}
+          <div className="absolute h-full w-full inset-0">
+            <Image
+              alt=""
+              width={2752}
+              height={1536}
+              src={"/bg.webp"}
+              className="w-full z-[2] h-full object-cover blur-xl 
+             [mask-image:linear-gradient(to_top,black,transparent)]
+             rounded-xl"
+            />
+          </div>
+          <Image
+            alt=""
+            width={2752}
+            height={1536}
+            src={"/bg.webp"}
+            className="h-full w-full -z-[1]"
           />
         </div>
       </div>
