@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sandboxd
+  namespace: vyoma-system
+  annotations: { cert-manager.io/cluster-issuer: letsencrypt }
+spec:
+  rules:
+    - host: daemon.vyoma.sbs
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend: { service: { name: sandboxd, port: { number: 80 } } }
+  tls:
+    - hosts: [daemon.vyoma.sbs]
+      secretName: sandboxd-tls

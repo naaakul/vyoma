@@ -1,7 +1,7 @@
 resource "vultr_kubernetes" "vyoma" {
   region  = var.region
   label   = var.cluster_label
-  version = "v1.31.1+1"
+  version = "v1.37.1+2"
 
   node_pools {
     node_quantity = 2

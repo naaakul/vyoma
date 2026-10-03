@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: sandboxd, namespace: vyoma-system }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: sandboxd } }
+  template:
+    metadata: { labels: { app: sandboxd } }
+    spec:
+      serviceAccountName: sandboxd
+      containers:
+        - name: sandboxd
+          image: REGISTRY_URL/sandboxd:latest
+          ports: [{ containerPort: 4000 }]
+          envFrom:
+            - secretRef: { name: sandboxd-env }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: sandboxd, namespace: vyoma-system }
+spec:
+  selector: { app: sandboxd }
+  ports: [{ port: 80, targetPort: 4000 }]

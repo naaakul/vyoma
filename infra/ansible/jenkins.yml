@@ -1,0 +1,44 @@
+- hosts: jenkins
+  become: true
+  tasks:
+    - name: install prerequisites
+      apt:
+        name: [openjdk-21-jdk, git, curl, gnupg, apt-transport-https, unzip]
+        update_cache: true
+
+    - name: add jenkins repo key
+      apt_key:
+        url: https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+        state: present
+
+    - name: add jenkins repo
+      apt_repository:
+        repo: "deb https://pkg.jenkins.io/debian-stable binary/"
+        state: present
+
+    - name: install jenkins
+      apt:
+        name: jenkins
+        update_cache: true
+
+    - name: install docker
+      shell: curl -fsSL https://get.docker.com | sh
+      args: { creates: /usr/bin/docker }
+
+    - name: add jenkins user to docker group
+      user: { name: jenkins, groups: docker, append: true }
+
+    - name: install kubectl
+      shell: |
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        install -m 0755 kubectl /usr/local/bin/kubectl
+      args: { creates: /usr/local/bin/kubectl }
+
+    - name: install terraform
+      shell: |
+        curl -fsSL https://releases.hashicorp.com/terraform/1.9.8/terraform_1.9.8_linux_amd64.zip -o /tmp/tf.zip
+        unzip -o /tmp/tf.zip -d /usr/local/bin
+      args: { creates: /usr/local/bin/terraform }
+
+    - name: enable jenkins
+      systemd: { name: jenkins, enabled: true, state: started }
